@@ -1,13 +1,12 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from 'next'
+import { TripListResponse } from '../../data/trips'
 
-type Data = {
-  name: string
-}
+const trips = require('../../data/trips.json')
 
 export default function handler(
   req: NextApiRequest,
-  res: NextApiResponse<Data>
+  res: NextApiResponse<TripListResponse>
 ) {
-  res.status(200).json({ name: 'John Doe' })
+  res.status(200).json(trips)
 }
