@@ -3,8 +3,8 @@ export interface TripListItem {
   curatedTripSetName: string;
   curatedTripSetDescription: string;
   showTripValue: boolean;
-  checkInDate: Date;
-  checkOutDate: Date;
+  checkInDate: string;
+  checkOutDate: string;
   numberOfDays: number;
   curatedTripMasterInventoryId: number;
   unitName: string;

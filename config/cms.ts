@@ -1,0 +1,1 @@
+export const CMSBaseUrl = 'http://cms.inspirato.com';
