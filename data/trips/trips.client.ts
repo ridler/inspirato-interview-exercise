@@ -1,7 +1,8 @@
-import { TripListResponse } from "./trips.model";
+import { TripListResponse, TripStyleById } from "./trips.model";
 
 const tripsEndpoit = "/api/trips";
 
-export function getTrips(): Promise<TripListResponse> {
-  return fetch(tripsEndpoit).then((response) => response.json());
+export function getTrips(query: string): Promise<TripListResponse> {
+  const url = `${tripsEndpoit}${query}`;
+  return fetch(url).then((response) => response.json());
 }

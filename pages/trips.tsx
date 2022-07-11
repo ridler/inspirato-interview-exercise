@@ -16,6 +16,7 @@ import {
 } from "@chakra-ui/react";
 import type { NextPage } from "next";
 import Head from "next/head";
+import { useRouter } from "next/router";
 import { Suspense, useEffect, useState } from "react";
 import { InspTripListItem } from "../components/trips/trip-list-item";
 import { ColorScheme } from "../config/colors";
@@ -28,21 +29,35 @@ import {
 import styles from "../styles/Home.module.css";
 
 const Trips: NextPage = () => {
+  const router = useRouter();
+
   const [trips, setTrips] = useState<TripListItem[]>([]);
   const [tripStyleById, setTripStyleById] = useState<TripStyleById>({});
   const [propertyTypeById, setPropertyTypeById] = useState<PropertyTypeById>(
     {}
   );
 
-  const [sort, setSort] = useState("checkInDate:asc");
+  const [queryState, setQueryState] = useState({
+    sort: "checkInDate:asc",
+    tripStyle: [] as number[],
+    propertyType: [] as number[],
+    ...router.query,
+  });
 
   useEffect(() => {
-    getTrips().then((tripsResponse) => {
-      setTrips(tripsResponse.tripSet);
-      setTripStyleById(tripsResponse.styles);
-      setPropertyTypeById(tripsResponse.parentCategories);
-    });
-  }, []);
+    router
+      .replace({ query: queryState })
+      .then(() => getTrips(location.search))
+      .then((tripsResponse) => {
+        setTrips(tripsResponse.tripSet);
+        setTripStyleById(tripsResponse.styles);
+        setPropertyTypeById(tripsResponse.parentCategories);
+      });
+  }, [queryState]);
+
+  useEffect(() => {
+    router.replace({ query: queryState });
+  }, [queryState]);
 
   return (
     <div className={styles.container}>
@@ -60,7 +75,15 @@ const Trips: NextPage = () => {
                 <Tag p="3" colorScheme={ColorScheme.tripStyle}>
                   <fieldset>
                     <legend>Trip Style</legend>
-                    <CheckboxGroup colorScheme={ColorScheme.tripStyle}>
+                    <CheckboxGroup
+                      colorScheme={ColorScheme.tripStyle}
+                      onChange={(tripStyle) =>
+                        setQueryState({
+                          ...queryState,
+                          tripStyle: tripStyle as number[],
+                        })
+                      }
+                    >
                       <Wrap spacing="6" my="2">
                         {Object.entries(tripStyleById).map(
                           ([styleId, label]) => (
@@ -78,7 +101,15 @@ const Trips: NextPage = () => {
                 <Tag colorScheme={ColorScheme.propertyType} p="3">
                   <fieldset>
                     <legend>Property Type</legend>
-                    <CheckboxGroup colorScheme={ColorScheme.propertyType}>
+                    <CheckboxGroup
+                      colorScheme={ColorScheme.propertyType}
+                      onChange={(propertyType) =>
+                        setQueryState({
+                          ...queryState,
+                          propertyType: propertyType as number[],
+                        })
+                      }
+                    >
                       <Wrap spacing="6" my="2">
                         {Object.entries(propertyTypeById).map(
                           ([propertyTypeId, label]) => (
@@ -101,8 +132,13 @@ const Trips: NextPage = () => {
                 <FormLabel htmlFor="sortSelect">Sort By</FormLabel>
                 <Select
                   id="sortSelect"
-                  value={sort}
-                  onChange={(e) => setSort(e.target.value)}
+                  value={queryState.sort}
+                  onChange={(e) =>
+                    setQueryState({
+                      ...queryState,
+                      sort: e.target.value,
+                    })
+                  }
                 >
                   <option value="checkInDate:asc">
                     Check-In Date: Earliest
