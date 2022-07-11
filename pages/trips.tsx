@@ -41,23 +41,26 @@ const Trips: NextPage = () => {
     sort: "checkInDate:asc",
     tripStyle: [] as number[],
     propertyType: [] as number[],
-    ...router.query,
   });
 
   useEffect(() => {
-    router
-      .replace({ query: queryState })
-      .then(() => getTrips(location.search))
-      .then((tripsResponse) => {
-        setTrips(tripsResponse.tripSet);
-        setTripStyleById(tripsResponse.styles);
-        setPropertyTypeById(tripsResponse.parentCategories);
-      });
-  }, [queryState]);
+    if (router.isReady) {
+      setQueryState({ ...queryState, ...router.query });
+    }
+  }, [router.isReady]);
 
   useEffect(() => {
-    router.replace({ query: queryState });
-  }, [queryState]);
+    if (router.isReady) {
+      router
+        .replace({ query: queryState })
+        .then(() => getTrips(location.search))
+        .then((tripsResponse) => {
+          setTrips(tripsResponse.tripSet);
+          setTripStyleById(tripsResponse.styles);
+          setPropertyTypeById(tripsResponse.parentCategories);
+        });
+    }
+  }, [queryState, router.isReady]);
 
   return (
     <div className={styles.container}>
@@ -76,6 +79,7 @@ const Trips: NextPage = () => {
                   <fieldset>
                     <legend>Trip Style</legend>
                     <CheckboxGroup
+                      value={queryState.tripStyle}
                       colorScheme={ColorScheme.tripStyle}
                       onChange={(tripStyle) =>
                         setQueryState({
@@ -102,6 +106,7 @@ const Trips: NextPage = () => {
                   <fieldset>
                     <legend>Property Type</legend>
                     <CheckboxGroup
+                      value={queryState.propertyType}
                       colorScheme={ColorScheme.propertyType}
                       onChange={(propertyType) =>
                         setQueryState({

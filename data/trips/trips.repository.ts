@@ -16,9 +16,9 @@ function sortByDate(
 ) {
   return direction === "asc"
     ? (a: TripListItem, b: TripListItem) =>
-        new Date(a[dateField]) > new Date(b[dateField]) ? 1 : 0
+        new Date(a[dateField]) > new Date(b[dateField]) ? 1 : -1
     : (a: TripListItem, b: TripListItem) =>
-        new Date(a[dateField]) < new Date(b[dateField]) ? 1 : 0;
+        new Date(a[dateField]) < new Date(b[dateField]) ? 1 : -1;
 }
 
 function filterByEnumId(
