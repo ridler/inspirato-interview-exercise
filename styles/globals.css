@@ -14,3 +14,8 @@ a {
 * {
   box-sizing: border-box;
 }
+
+:root {
+  --chakra-colors-chakra-border-color: rgb(78, 78, 78) !important;
+}
+

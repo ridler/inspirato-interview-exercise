@@ -37,7 +37,16 @@ export interface TripListItem {
   dataMonthName: string;
 }
 
-export interface TripListResponse {
-    tripSet: TripListItem[];
+export interface TripStyleById {
+  [id: number]: string
 }
 
+export interface PropertyTypeById {
+  [id: number]: string
+}
+
+export interface TripListResponse {
+  tripSet: TripListItem[];
+  styles: TripStyleById;
+  parentCategories: PropertyTypeById;
+}
