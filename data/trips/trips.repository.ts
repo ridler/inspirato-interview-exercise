@@ -36,6 +36,7 @@ function filterByEnumId(
 
 /**
  * This is a hacked stub of what a database query engine might take care of in a real application
+ * TODO: add support for pagination
  */
 export function retrieveTrips(
   sortField: TripSortFields,
