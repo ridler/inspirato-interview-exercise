@@ -8,10 +8,14 @@ import {
   TripFilters,
 } from "../../data/trips/trips.repository";
 
+/**
+ * This function is the API endpoint that sends JSON data relevant to the trips page
+ */
 export default function handler(
   req: NextApiRequest,
   res: NextApiResponse<TripListResponse>
 ) {
+  // TODO: query parameter validation and general API security
   const { sort, tripStyle, propertyType } = req.query;
   const [sortField, sortDirection] = sort ? (sort as string).split(":") : [];
 

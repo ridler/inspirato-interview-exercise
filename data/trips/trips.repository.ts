@@ -2,6 +2,11 @@ import { TripListItem, TripListResponse } from "./trips.model";
 
 const jsonData = require("./trips.json") as TripListResponse;
 
+/**
+ * This module acts as a "data layer". It is responsible for querying trip data, and is agnostic of
+ * transfer formats or protocols
+ */
+
 type TripSortFields = keyof TripListItem & "checkInDate";
 type TripSortDirection = "asc" | "desc";
 
@@ -29,13 +34,16 @@ function filterByEnumId(
   return trips.filter((trip) => idQuery.includes(trip[field]));
 }
 
+/**
+ * This is a hacked stub of what a database query engine might take care of in a real application
+ */
 export function retrieveTrips(
   sortField: TripSortFields,
   sortDirection: TripSortDirection,
   filters?: Partial<TripFilters>
 ): TripListItem[] {
-  console.log(filters);
   let trips = jsonData.tripSet;
+  // TODO: filter and sort in one step (like with a database).
   if (filters) {
     Object.entries(filters).forEach(([field, query]) => {
       if (query.length)
